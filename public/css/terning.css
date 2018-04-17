@@ -1,0 +1,14 @@
+#dice{
+    background: url(../terning/dice.png) no-repeat;
+    min-height: 150px;
+    min-width: 142px;
+    height:150px;
+    width:142px;
+}
+
+.dOne {background-position:-725px!important;}
+.dTwo {background-position:-580px!important;}
+.dThree { background-position:-435px!important;}
+.dFour { background-position:-290px!important;}
+.dFive{ background-position:-145px!important;}
+.dSix {background-position:0px!important;}

@@ -1,0 +1,5 @@
+#Start: START
+#Bilde: forsideforfattere.jpg
+#Handling: Gå til spilleregler (Spilleregler), pil.png, 1086, 6
+#Slutt
+

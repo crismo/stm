@@ -1,0 +1,19 @@
+{
+  "name": "SimpelServer",
+  "version": "1.0.0",
+  "description": "A simple server for STM projects",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Christian Simonsen",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "body-parser": "~1.8.1",
+    "express": "^4.13.4",
+    "moment": "^2.11.2",
+    "underscore": "^1.8.3",
+    "validate.js": "^0.9.0",
+    "url":"^0.11.0"
+  }
+}

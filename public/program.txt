@@ -1,5 +1,9 @@
 #Start: START
-#Bilde: forsideforfattere.jpg
-#Handling: Gå til spilleregler (Spilleregler), pil.png, 1086, 6
+#Bilde: bakgrunTemplate.png
+#Handling: Gå til NesteSide, knapp.png, bakgrunn=bakgrun2.png, 200,200
+//#Lagre: bakgrunn=bakgrun2.png
 #Slutt
 
+#Start: NesteSide 
+#Bilde: [bakgrunn]
+#Slutt

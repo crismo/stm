@@ -691,17 +691,14 @@
 
     function loadFile(filePath, onComplete) {
 
-      fetch(filePath)
+     fetch(filePath)
         .then(function (response) {
           return response.text();
         })
         .then(function (text) {
           onComplete(true, text);
         });
-      /*.catch( error => {
-                onComplete(false, null);
-                console.error("Request status for " + MANUSCRIPT_FILE + " " + error);
-              });*/
+    
       /*
             var request = new XMLHttpRequest();
             request.open('GET', filePath, true);

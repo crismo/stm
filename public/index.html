@@ -89,8 +89,7 @@
     var dice = null;
     var state = [];
 
-    let keywords = [
-    {
+    let keywords = [{
         key: "Lagre",
         reg: /\#\s*Lagre\s*:\s*(.*)/,
         atomic: true
@@ -259,35 +258,45 @@
 
       for (let keyWord in section) {
         if (section.hasOwnProperty(keyWord)) {
-           let item = section[keyWord];
-           let target = item.match(/\[([^\)]*)\]/);
-           if(target){
-            console.log("Found state");
-            console.log(keyWord + " " + item + " " + target);
-            item = item.replace(target[0],state[target[1]])
+          let item = section[keyWord];
+
+          if (Array.isArray(item)) {
+            item = item.map(i => applyState(i));
             section[keyWord] = item;
+          } else {
+
+            let target = item.match(/\[([^\)]*)\]/);
+            if (target) {
+              console.log("Found state");
+              console.log(keyWord + " " + item + " " + target);
+              item = item.replace(target[0], state[target[1]])
+              section[keyWord] = item;
+            }
           }
         }
       }
-      
 
-     
+
+
 
       return section;
     }
 
-    function saveState(raw){
-      if(raw.indexOf("=")> 0){
-          raw = raw.split("=");
-          let key = raw[0].trim();
-          let value = raw[1].trim();
-          state[key] = value;
+    function saveState(raw) {
+      raw = raw.split(",");
+      raw.forEach(st => {
+      if (st.indexOf("=") > 0) {
+        st = st.split("=");
+        let key = st[0].trim();
+        let value = st[1].trim();
+        state[key] = value;
 
-          console.log("State " + key + " set to "+ value);
+        console.log("State " + key + " set to " + value);
 
-      }else{
+      } else {
         console.error("This is not a valid state " + state)
       }
+    });
 
     }
 
@@ -430,8 +439,8 @@
         setupDice();
       }
 
-      if(program.Lagre){
-  //----------------------------------------------------------------------------------------------------       
+      if (program.Lagre) {
+        //----------------------------------------------------------------------------------------------------       
         saveState(program.Lagre);
       }
 
@@ -627,7 +636,10 @@
           h.Tekst = text;
         } else if (item.indexOf("=") > -1) {
           console.log("Found state")
-          h.Lagre = item.trim();
+          if(h.Lagre == undefined){
+            h.Lagre = [];
+          }
+          h.Lagre.push(item.trim());
         } else if (item.indexOf(".png") > -1 || item.indexOf(".jpg") > -1) {
           console.log("Found image");
           h.Bilde = item.trim();
@@ -691,14 +703,14 @@
 
     function loadFile(filePath, onComplete) {
 
-     fetch(filePath)
+      fetch(filePath)
         .then(function (response) {
           return response.text();
         })
         .then(function (text) {
           onComplete(true, text);
         });
-    
+
       /*
             var request = new XMLHttpRequest();
             request.open('GET', filePath, true);

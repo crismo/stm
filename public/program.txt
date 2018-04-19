@@ -1,9 +1,10 @@
 #Start: START
 #Bilde: bakgrunTemplate.png
-#Handling: Gå til NesteSide, knapp.png, bakgrunn=bakgrun2.png, 200,200
-//#Lagre: bakgrunn=bakgrun2.png
+#Handling: Gå til NesteSide (Scene2), A.png, figur=A.png, bakgrunn=bakgrun2.png, 200,200
+#Handling: Gå til NesteSide (Scene2), B.png, figur=B.png, bakgrunn=bakgrun2.png, 400,200
 #Slutt
 
-#Start: NesteSide 
+#Start: Scene2 
 #Bilde: [bakgrunn]
+#Handling: ingen, [figur], 500,200
 #Slutt

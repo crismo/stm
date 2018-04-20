@@ -75,6 +75,7 @@
 
   </div>
 
+  <input type="file" id="files" name="files[]" multiple />
   <script>
     const MANUSCRIPT_FILE = "program.txt";
     var program_source = null;
@@ -169,6 +170,16 @@
         key: "DragMål",
         reg: /\#\s*DragMål\s*:\s*(.*)/,
         atomic: true
+      },
+      {
+        key: "LydForRiktig",
+        reg: /\#\s*LydForRiktig\s*:\s*(.*)/,
+        atomic: true
+      },
+      {
+        key: "LydForFeil",
+        reg: /\#\s*LydForFeil\s*:\s*(.*)/,
+        atomic: true
       }
 
     ];
@@ -202,13 +213,11 @@
         if (item.indexOf("//") != 0) {
           if (item != "" && item.length > 1) {
             if (section == null) {
-              console.log("New section");
               section = [];
             }
             section.push(item);
           } else {
             if (section != null) {
-              console.log("Adding to source");
               source.push(section);
               section = null;
             }
@@ -275,28 +284,26 @@
           }
         }
       }
-
-
-
-
       return section;
     }
 
     function saveState(raw) {
-      raw = raw.split(",");
-      raw.forEach(st => {
-      if (st.indexOf("=") > 0) {
-        st = st.split("=");
-        let key = st[0].trim();
-        let value = st[1].trim();
-        state[key] = value;
-
-        console.log("State " + key + " set to " + value);
-
-      } else {
-        console.error("This is not a valid state " + state)
+      if (!Array.isArray(raw)) {
+        raw = raw.split(",");
       }
-    });
+      raw.forEach(st => {
+        if (st.indexOf("=") > 0) {
+          st = st.split("=");
+          let key = st[0].trim();
+          let value = st[1].trim();
+          state[key] = value;
+
+          console.log("State " + key + " set to " + value);
+
+        } else {
+          console.error("This is not a valid state " + state)
+        }
+      });
 
     }
 
@@ -369,7 +376,6 @@
           }
         })
 
-
         if (i > -1) {
           i++;
           playSound(r[i]);
@@ -396,7 +402,8 @@
     function renderProgramSection(program) {
 
       program = applyState(program);
-      stopSound();
+      //Linje 400, stopper lydene som kommer fra handlingknappene, som også har 'Gå til' funksjonalitet. 
+	  stopSound();
       currentCount = 0;
       ansList = [];
       let element = getTemplate("oppgave");
@@ -440,7 +447,6 @@
       }
 
       if (program.Lagre) {
-        //----------------------------------------------------------------------------------------------------       
         saveState(program.Lagre);
       }
 
@@ -491,11 +497,12 @@
         let auto = raw[0].trim();
         auto = (auto.toLowerCase() === "ja") ? true : false;
         let time = raw[1].trim();
-        let bilde = raw[2] ? raw[2].trim() : "";
-        let x = raw[3] ? raw[3].trim() : 0;
-        let y = raw[4] ? raw[4].trim() : 0;
 
-        if (raw.length > 2) {
+        if (raw.length > 3) {
+
+          let bilde = raw[2] ? raw[2].trim() : "";
+          let x = raw[raw.length - 2] ? raw[raw.length - 2].trim() : 0;
+          let y = raw[raw.length - 1] ? raw[raw.length - 1].trim() : 0;
 
           let obj = {
             x: x,
@@ -503,6 +510,7 @@
             Bilde: bilde,
             Tid: time
           };
+
           let t = getTemplate("timer");
           t = applyModelToTemplate(obj, t);
           t = applyConditionalsToTemplate(obj, t);
@@ -511,16 +519,12 @@
         }
 
         if (auto) {
-          console.log("Timer started");
           startTimer(time);
         }
 
       }
 
       element = element.replace("[Nedtelling/]", output);
-
-
-
       return element;
     }
 
@@ -528,28 +532,31 @@
     var countInterval = null;
 
     function startTimer(tid) {
-      console.log("Starter Nedtelling");
-      countDownTime = tid;
+
+      countDownTime = tid * 1000;
       countInterval = setInterval(function () {
         countDownTime--;
         if (countDownTime <= 0) {
-          console.log("Nedtelling ferdig");
-          let raw = currentSection.Nedtelling.split(",");
-          //let sounds = [raw[5], raw[6]];
           clearInterval(countInterval);
-          if (raw.length > 2)
+          let raw = currentSection.Nedtelling.split(",");
+          if (currentSection.Neste) {
+            gotoNext(currentSection.Neste)
+          }
+          if (raw.length > 2) {
             playSound(raw[5] + "," + raw[6]);
+          }
         }
 
-        console.log("Nedtelling " + countDownTime);
-
-      }, 1000);
+      }, 10);
     }
     // Drag and Drop ------------------------------------------------------
     var mouseX = 0;
     var mouseY = 0;
     var clickTaerget = null;
     var canKillClickTarget = false;
+
+    var created = 0;
+
     $(document).mousemove(function (e) {
       mouseX = e.pageX;
       mouseY = e.pageY;
@@ -561,27 +568,77 @@
       }
     });
 
-
     $(document).click(function (e) {
       if (clickTaerget && canKillClickTarget) {
+        testTarget(clickTaerget);
         clickTaerget = null;
         console.log("Click target tatt bort av dokument");
       }
       canKillClickTarget = true;
     });
 
+    function testTarget(item) {
+      let el = item[0]
+      let target = document.getElementById(el.dataset.target);
+      if(target){
+        let rect1 = el.getBoundingClientRect();
+        let rect2 = target.getBoundingClientRect();
+        var overlap = !(rect1.right < rect2.left ||
+          rect1.left > rect2.right ||
+          rect1.bottom < rect2.top ||
+          rect1.top > rect2.bottom)
+
+        return overlap
+      }
+
+      return false;
+    }
+
     function createDragAndDrop(program, element) {
 
       let output = "";
-      if (program.Drag) {
-        let raw = program.Drag.split(",");
-        let dragRekt = program.DragRekt.split(",");
-        raw.forEach(item => {
-          let pos = GetRandomPosInRect(dragRekt);
-          let dragObject = "<img  onclick='startDrag(event)' class='drag' src='img/" + item.trim() +
-            "'  style='left:" + pos.x + "px;top:" + pos.y + "px' />"
-          output += dragObject;
-        });
+      if (program.DragAlternativ) {
+
+        let parseDrag = raw => {
+          let components = raw.split(",")
+          let name = components[0].trim();
+          let target = components[1].trim();
+          let img = components[2].trim();
+          let x = components[3].trim();
+          let y = components[4].trim();
+          let rect = [x, y];
+          let count = 1;
+          if (components.length > 5) {
+            let w = components[5].trim();
+            let h = components[6].trim();
+            count = components[7].trim();
+            rect = [x, y, w, h];
+          }
+
+          for (var i = 0; i < count; i++) {
+            let pos = GetRandomPosInRect(rect);
+            if (program.Tell) {
+              if (program.Tell.trim() == name) {
+                created++;
+              }
+            } else {
+              created++;
+            }
+
+            let dragObject = "<img  alt='" + name + "' data-target='target-" + target +
+              "' onclick='startDrag(event)' class='drag' src='img/" + img.trim() + "'  style='left:" + pos.x +
+              "px;top:" + pos.y + "px' />"
+            output += dragObject;
+          }
+        }
+
+        if (Array.isArray(program.DragAlternativ)) {
+          program.DragAlternativ.forEach(raw => {
+            parseDrag(raw);
+          });
+        } else{
+          parseDrag(program.DragAlternativ);
+        }
 
       }
 
@@ -593,12 +650,47 @@
       if (clickTaerget == null) {
         canKillClickTarget = false;
         clickTaerget = $(ev.target);
-        console.log("Click target satt");
+
       } else {
+        let hit = testTarget(clickTaerget);
+
+        if (hit) {
+
+          let remove = true;
+          if (currentSection.Tell) {
+            let atr = clickTaerget[0].getAttribute("alt").trim();
+            if (currentSection.Tell.trim() == atr) {
+              created--;
+            } else{
+              remove = false;
+            }
+          } else {
+            created--;
+          }
+
+          if(remove){
+            if(currentSection.LydForRiktig){
+              playSound( pickRandomListElement(currentSection.LydForRiktig.split(",")));
+            }
+          } else {
+            if(currentSection.LydForFeil){
+              playSound(currentSection.LydForFeil);
+            }
+          }
+
+          if (currentSection.DragForbli == undefined && remove) {
+            clickTaerget[0].parentNode.removeChild(clickTaerget[0]);
+          }
+        } 
+
         clickTaerget = null;
-        console.log("Click target tatt bort");
+
+        if (created <= 0) {
+          gotoNext(currentSection.Neste)
+        }
+
       }
-      //ev.dataTransfer.setData("text", ev.target.id);
+
     }
 
     function GetRandomPosInRect(rect) {
@@ -636,14 +728,14 @@
           h.Tekst = text;
         } else if (item.indexOf("=") > -1) {
           console.log("Found state")
-          if(h.Lagre == undefined){
+          if (h.Lagre == undefined) {
             h.Lagre = [];
           }
           h.Lagre.push(item.trim());
         } else if (item.indexOf(".png") > -1 || item.indexOf(".jpg") > -1) {
           console.log("Found image");
           h.Bilde = item.trim();
-        } else if (item.indexOf(".mp3") > -1) {
+        } else if (item.indexOf(".mp3") > -1 || item.indexOf(".wav") > -1) {
           h.Lyd = item.trim();
           console.log("Found Sound");
         }
@@ -861,6 +953,14 @@
       return a;
     }
 
+    function pickRandomListElement(list){
+      if(Array.isArray(list)){
+        let rnd = Math.round((list.length-1) * Math.random())
+        return list[rnd].trim();
+      }
+      return list.trim();
+    }
+
     function togleButtons(target) {
       let el = document.getElementById(target);
       if (el.classList.contains("invisible")) {
@@ -904,7 +1004,7 @@
           countDown--;
           if (countDown <= 0) {
             clearInterval(diceInterval);
-            if (currentSection.Terning.indexOf(".mp3") > -1) {
+            if (currentSection.Terning.indexOf(".mp3") > -1 || currentSection.Terning.indexOf(".wav") > -1) {
               playSound(currentSection.Terning);
             }
           }
@@ -957,6 +1057,27 @@
       </button> {{msg/}}
     </div>
   </script>
+
+  <script>
+    function handleFileSelect(evt) {
+      var file = evt.target.files[0];
+
+      var reader = new FileReader();
+
+      reader.onload = function (contens) {
+
+        let text = contens.target.result;
+        start(text);
+      }
+
+      reader.readAsText(file);
+
+    }
+
+    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+  </script>
+
+ 
 
 </body>
 

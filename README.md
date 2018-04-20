@@ -66,10 +66,6 @@ Eks:
 
 #Bilde: [bakgrunn]
 
-Tell
------
-
-
 Terning
 -----
 
@@ -78,21 +74,61 @@ TerningPos
 
 Nedtelling
 -----
+Bruk: #Nedtelling: [JA/NEI], [tid] , [bilde], [x], [y], [sounds]
 
-Drag
------
+JA/NEI -> Automatisk nedtelling 
 
 DragForbli
 -----
+Bruk: #DragForbli: Ja
 
-DragRekt
------
+Gjør det slik at ting som blir dradd til riktig mål ikke forsvinner.
 
 DragAlternativ
 -----
+Bruk: #DragAlternativ: [lbl], [mål] ,[bilde] ,[x], [y], [bredde], [høyde], [antall]
+
+lbl -> navn som kan brukes til å gjenkjenne dette elementets type, trenger ikke å være unikt
+
+mål -> Stedet hvor man skal flytte elementet til.
+
+bilde -> grafisk representasjon av elementet.
+
+x,y,bredde,høyde -> Rektangel hvor elementene skal generees.
+
+antall -> antall elementer som skal generers.
 
 DragMål
 -----
+Bruk: #DragMål: [lbl], [bilde], [x], [y]
+
+Tell
+-----
+Bruk: #Tell: [lbl]
+
+Dersom tell brukes med #DragMål så vil programmet si seg ferdig når alle elementer av typen [lbl] er flyttet til målet.
+
+Eks:
+```
+#DragAlternativ: block, MålPlass ,block.png , 50, 50, 300, 300, 5
+#DragAlternativ: block2, MålPlass ,block2.png , 50, 50, 300, 300, 5
+#LydForRiktig: ok.mp3, bra.mp3, fantastisk.mp3
+#LydForFeil: err.mp3
+#Tell: block2
+#DragMål: MålPlass, [figur], 500, 450
+#Neste: Scene4
+```
+
+LydForRiktig:
+-----
+Bruk: #LydForRiktig: sound1,sound2,.....
+Spiller av en tilfeldig lyd fra listen ved riktig (bare drag oppgaer så langt)
+
+LydForFeil:
+-----
+Bruk: #LydForFeil: sound1,sound2,.....
+
+Spiller av en tilfeldig lyd fra listen ved feil (bare drag oppgaer så langt)
 
 <a href="https://heroku.com/deploy?template=https://github.com/crismo/stm">
   <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">

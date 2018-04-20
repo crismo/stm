@@ -1,10 +1,44 @@
 #Start: START
 #Bilde: bakgrunTemplate.png
-#Handling: Gå til NesteSide (Scene2), A.png, figur=A.png, bakgrunn=bakgrun2.png, 200,200
-#Handling: Gå til NesteSide (Scene2), B.png, figur=B.png, bakgrunn=bakgrun2.png, 400,200
+#Handling: Gå til NesteSide (valgte A), A.png, 200,200
+#Handling: Gå til NesteSide (valgte B), B.png, 400,200
+#Slutt
+
+#Start: valgte A
+// Denne scenene er bare for å lagre alle variablene knyttet til valget A
+#Lagre: bakgrunn=bakgrun2.png
+#Lagre: figur=A.png
+// Nedtelling med 0 fører til at programmet lynraskt hopper til neste scene. 
+#Nedtelling: Ja, 0
+#Neste: Scene2
+#Slutt
+
+#Start: valgte B
+// Denne scenene er bare for å lagre alle variablene knyttet til valget B
+#Lagre: bakgrunn=bakgrun2.png
+#Lagre: figur=B.png
+// Nedtelling med 0 fører til at programmet lynraskt hopper til neste scene. 
+#Nedtelling: Ja, 0
+#Neste: Scene2
 #Slutt
 
 #Start: Scene2 
 #Bilde: [bakgrunn]
-#Handling: ingen, [figur], 500,200
+#Handling: Gå til Scene3, [figur], 500,200
+#Slutt
+
+#Start: Scene3
+#Bilde: [bakgrunn]
+#DragAlternativ: block, MålPlass ,block.png , 50, 50, 300, 300, 5
+#DragAlternativ: block2, MålPlass ,block2.png , 50, 50, 300, 300, 5
+#LydForRiktig: ok.mp3, bra.mp3, fantastisk.mp3
+#LydForFeil: err.mp3
+#Tell: block2
+#DragMål: MålPlass, [figur], 500, 450
+#Neste: Scene4
+#Slutt
+
+#Start: Scene4 
+#Bilde: [bakgrunn]
+#Handling: Gå til Scene3, [figur], 500,200
 #Slutt

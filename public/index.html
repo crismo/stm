@@ -266,20 +266,52 @@
 
       for (let keyWord in section) {
         if (section.hasOwnProperty(keyWord)) {
+
           let item = section[keyWord];
+          if(typeof(section) == "string"){
+            item = section;
+          }
 
           if (Array.isArray(item)) {
-            item = item.map(i => applyState(i));
-            section[keyWord] = item;
+            
+            let output = [];
+            for(var index = 0; index < item.length; index++){
+              let newItem = applyState(item[index]);
+              output[index] = newItem;
+            }
+            section[keyWord] = output;
           } else {
 
-            let target = item.match(/\[([^\)]*)\]/);
-            if (target) {
-              console.log("Found state");
-              console.log(keyWord + " " + item + " " + target);
-              item = item.replace(target[0], state[target[1]])
-              section[keyWord] = item;
+            var regex = /\[([^\W)]*)\]/gm;
+            let out = item;
+            let m;
+
+            if(item.indexOf("suralv1")> -1){
+              console.log("WTF");
             }
+
+            while ((m = regex.exec(item)) !== null) {
+                // This is necessary to avoid infinite loops with zero-width matches
+                if (m.index === regex.lastIndex) {
+                    regex.lastIndex++;
+                }
+               
+                out = out.replace(m[0],state[m[1]]);
+                
+                // The result can be accessed through the `m`-variable.
+                m.forEach((match, groupIndex) => {
+                    console.log(`Found match, group ${groupIndex}: ${match}`);
+                });
+            }
+
+          if(typeof(section) == "string"){
+            section = out;
+          } else{
+            section[keyWord] = out;
+          }
+          
+
+
           }
         }
       }

@@ -76,7 +76,7 @@ def main(argv):
     newImages = ''
     n = 0
     try:
-        opts, args = getopt.getopt(argv,"h:n:iF:iI:oF:oI:",["nummer","iFile=","iImg=", "oFile=", "oImg="])
+        opts, args = getopt.getopt(argv,"h:n:iF:iI:oF:oI:",["nummer=","iFile=","iImg=", "oFile=", "oImg="])
     except getopt.GetoptError as e:
         print('Convert.py --nummer <index> --iFIle <orgFile> --iImg <orgImages> --oFile <newFile> --oImg <newImages>')
         print(e)
@@ -94,7 +94,7 @@ def main(argv):
             newTxtFile = arg
         elif opt in ("-oI", "--oImg"):
             newImages = arg
-        elif opt in ("-n", "--number"):
+        elif opt in ("-n", "--nummer"):
             n = int(arg)
     print(n)
     print(orgTxtFile)

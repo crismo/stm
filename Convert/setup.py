@@ -6,3 +6,4 @@ def install(package):
 
 install("os")
 install("pillow")
+install("getopt")

@@ -603,14 +603,15 @@
           let name = components[0].trim();
           let target = components[1].trim();
           let img = components[2].trim();
-          let x = components[3].trim();
-          let y = components[4].trim();
+          let sound = components[3].trim()
+          let x = components[4].trim();
+          let y = components[5].trim();
           let rect = [x, y];
           let count = 1;
-          if (components.length > 5) {
-            let w = components[5].trim();
-            let h = components[6].trim();
-            count = components[7].trim();
+          if (components.length > 6) {
+            let w = components[6].trim();
+            let h = components[7].trim();
+            count = components[8].trim();
             rect = [x, y, w, h];
           }
 
@@ -626,7 +627,7 @@
 
             let dragObject = "<img  alt='" + name + "' data-target='target-" + target +
               "' onclick='startDrag(event)' class='drag' src='img/" + img.trim() + "'  style='left:" + pos.x +
-              "px;top:" + pos.y + "px' />"
+              "px;top:" + pos.y + "px' data-sound='"+ sound +"' />"
             output += dragObject;
           }
         }
@@ -656,8 +657,11 @@
         if (hit) {
 
           let remove = true;
+          let sound = clickTaerget[0].getAttribute("data-sound").trim();
+
           if (currentSection.Tell) {
             let atr = clickTaerget[0].getAttribute("alt").trim();
+           
             if (currentSection.Tell.trim() == atr) {
               created--;
             } else{
@@ -668,7 +672,10 @@
           }
 
           if(remove){
-            if(currentSection.LydForRiktig){
+            if(sound && sound.length > 4){
+                playSound(sound);
+            }
+            else if(currentSection.LydForRiktig){
               playSound( pickRandomListElement(currentSection.LydForRiktig.split(",")));
             }
           } else {
@@ -695,6 +702,8 @@
     function GetRandomPosInRect(rect) {
       let minX = rect[0].trim();
       let minY = rect[1].trim();
+
+      if(rect.length > 2){
       let width = rect[2].trim();
       let height = rect[3].trim();
 
@@ -704,6 +713,11 @@
       return {
         x: x,
         y: y
+      };
+      }
+      return{
+        x: rect[0],
+        y: rect[1]
       };
     }
 

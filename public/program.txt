@@ -29,8 +29,8 @@
 
 #Start: Scene3
 #Bilde: [bakgrunn]
-#DragAlternativ: block, MålPlass ,block.png , 50, 50, 300, 300, 5
-#DragAlternativ: block2, MålPlass ,block2.png , 50, 50, 300, 300, 5
+#DragAlternativ: block, MålPlass ,block.png , "", 50, 50, 300, 300, 2
+#DragAlternativ: block2, MålPlass ,block2.png ,"", 50, 50, 300, 300, 2
 #LydForRiktig: ok.mp3, bra.mp3, fantastisk.mp3
 #LydForFeil: err.mp3
 #Tell: block2
@@ -40,5 +40,7 @@
 
 #Start: Scene4 
 #Bilde: [bakgrunn]
+#DragAlternativ: block, MålPlass ,block.png , err.mp3, 50, 50
+#DragMål: MålPlass, [figur], 500, 450
 #Handling: Gå til Scene3, [figur], 500,200
 #Slutt

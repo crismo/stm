@@ -1,46 +1,265 @@
-#Start: START
-#Bilde: bakgrunTemplate.png
-#Handling: Gå til NesteSide (valgte A), A.png, 200,200
-#Handling: Gå til NesteSide (valgte B), B.png, 400,200
+#Start: Intro
+#Bilde: IntroNottiNotte.png
+#Lyd: TrykkPaDenGronnePilenNesteSide.m4a
+#Handling: Intro, StorGladNotte.png, 950, 650
+#Handling: Gå til Bruksanvisning, LitenGronnPil.png, 2200, 1800
+#Slutt:
+
+#Start: Bruksanvisning
+#Bilde: Bruksanvisning.png
+#Lyd: HerErSpillereglene.m4a, TrykkPaDenGronnePilenNesteSide.m4a
+#Handling: Gå til Alternativ start, LitenGronnPil.png, 2200, 1900
+#Slutt:
+
+#Start: Alternativ start
+#Bilde: bakgrunnutensti.png
+#Lyd: TrykkPaNottinott.m4a
+#Handling: Gå til Stienstein, StorGladNotte.png, NottinottLyd.wav, 2121, 1685
 #Slutt
 
-#Start: valgte A
-// Denne scenene er bare for å lagre alle variablene knyttet til valget A
-#Lagre: bakgrunn=bakgrun2.png
-#Lagre: figur=A.png
-// Nedtelling med 0 fører til at programmet lynraskt hopper til neste scene. 
-#Nedtelling: Ja, 0
-#Neste: Scene2
+#Start: Stienstein
+#Bilde: bakgrunnmedsti.png
+#Lyd: IntroduksjonAvKarakter.wav, TrykkPaStein.wav
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 305, 1689
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Steinen (Steinen), Stein.png, RiktigLyd.wav, 1609, 1613
+#Handling: Feil, Bro.png, FeilPlassPaStien.wav, 1589, 1233
+#Handling: Feil, Rev.png, FeilPlassPaStien.wav, 565, 953
+#Handling: Feil, Tre.png, FeilPlassPaStien.wav, 813, 285
+#Handling: Feil, Kurv.png, FeilPlassPaStien.wav, 1661, 337
 #Slutt
 
-#Start: valgte B
-// Denne scenene er bare for å lagre alle variablene knyttet til valget B
-#Lagre: bakgrunn=bakgrun2.png
-#Lagre: figur=B.png
-// Nedtelling med 0 fører til at programmet lynraskt hopper til neste scene. 
-#Nedtelling: Ja, 0
-#Neste: Scene2
+#Start: Steinen
+#Bilde: bakgrunnmedgress.png
+#Lyd: ForskjelligeStorrelser.wav, LengsteKatt.wav
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 237, 1689
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Steinen1 (Steinen1), LengstKatt.png, RiktigLyd.wav, 1645, 1321
+#Handling: Feil, MellomKatt.png, FeilLyd.wav, 1081, 881
+#Handling: Feil, KortestKatt.png, FeilLyd.wav, 361, 449
+#Slutt:
+
+#Start: Steinen1
+#Bilde: bakgrunnmedgress.png
+#Lyd: MellomsteKatt.wav
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 237, 1689
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Steinen2 (Steinen2), MellomKatt.png, RiktigLyd.wav, 1081, 881
+#Handling: Feil, KortestKatt.png, FeilLyd.wav, 361, 449
+#Handling: Feil, LengstKatt.png, FeilLyd.wav, 1645, 1321
+#Slutt:
+
+#Start: Steinen2
+#Bilde: bakgrunnmedgress.png
+#Lyd: KortesteKatt.wav
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav,  237, 1689
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Steinen3 (Steinen3), KortestKatt.png, RiktigLyd.wav, 361, 449
+#Handling: Feil, LengstKatt.png, FeilLyd.wav, 1645, 1321
+#Handling: Feil, MellomKatt.png, FeilLyd.wav, 1081, 881
+#Slutt:
+
+#Start: Steinen3
+#Bilde: bakgrunnmedgress.png
+#Lyd: MinsteApe.wav
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 237, 1689
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Steinen4 (Steinen4), LitenApe.png, RiktigLyd.wav, 2081, 777
+#Handling: Feil, MellomApe.png, FeilLyd.wav, 531, 681
+#Handling: Feil, StorApe.png, FeilLyd.wav, 1313, 1141
+#Slutt:
+
+#Start: Steinen4
+#Bilde: bakgrunnmedgress.png
+#Lyd: StorstApe.wav
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 237, 1689
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Steinen5 (Steinen5), StorApe.png, RiktigLyd.wav, 1313, 1141
+#Handling: Feil, LitenApe.png, FeilLyd.wav, 2081, 777
+#Handling: Feil, MellomApe.png, FeilLyd.wav, 531, 681
+#Slutt:
+
+#Start: Steinen5
+#Bilde: bakgrunnmedgress.png
+#Lyd: MellomsteApe.wav
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 237, 1689
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Stienstein1 (Stienstein1), MellomApe.png, RiktigLyd.wav, 361, 449
+#Handling: Feil, LitenApe.png, FeilLyd.wav, 2081, 777
+#Handling: Feil, StorApe.png, FeilLyd.wav, 1313, 1141
+#Slutt:
+
+#Start: Stienstein1 
+#Bilde: bakgrunnmedsti.png
+#Lyd: Sabra.wav, TrykkPaBroa.wav
+#Handling: Litennott, LitenNott.png, 1665, 1689
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 1509, 1765
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Broen (Broen), Bro.png, RiktigLyd.wav, 1589, 1233
+#Handling: Feil, Rev.png, FeilPlassPaStien.wav, 565, 953
+#Handling: Feil, Tre.png, FeilPlassPaStien.wav, 813, 285
+#Handling: Feil, Kurv.png, FeilPlassPaStien.wav, 1661, 337
 #Slutt
 
-#Start: Scene2 
-#Bilde: [bakgrunn]
-#Handling: Gå til Scene3, [figur], 500,200
+#Start: Broen
+#Bilde: bakgrunnmedgress.png
+#Lyd: FinnBallene.wav, GronnPilBallOppgaven.m4a
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 1509, 1765
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Feil, GarnNoste.png, FeilLyd.wav, 793, 1681
+#Handling: Feil, Tomat.png, FeilLyd.wav, 1181, 505
+#Handling: Feil, Appelsin.png, FeilLyd.wav, 1601, 1317
+#Handling: Riktig, Basketball.png, RiktigLyd.wav, 2101, 1545
+#Handling: Riktig, Kule.png, RiktigLyd.wav, 305, 641
+#Handling: Feil, Eple.png, FeilLyd.wav, 1429, 1405
+#Handling: Riktig, Fotball.png, RiktigLyd.wav, 2257, 293
+#Handling: Gå til Stienstein2 (Stienstein2), LitenGronnPil.png, 2200, 1900
+#Slutt: 
+
+#Start: Stienstein2 
+#Bilde: bakgrunnmedsti.png
+#Lyd: Sabra.wav, TrykkPaBusk.wav
+#Handling: Litennott, LitenNott.png, 1665, 1689
+#Handling: Litennott, LitenNott.png, 1789, 1365
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 2265, 1385
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Busken (Busken), Rev.png, RiktigLyd.wav, 565, 953
+#Handling: Feil, Tre.png, FeilPlassPaStien.wav, 813, 285
+#Handling: Feil, Kurv.png, FeilPlassPaStien.wav, 1661, 337
 #Slutt
 
-#Start: Scene3
-#Bilde: [bakgrunn]
-#DragAlternativ: block, MålPlass ,block.png , "", 50, 50, 300, 300, 2
-#DragAlternativ: block2, MålPlass ,block2.png ,"", 50, 50, 300, 300, 2
-#LydForRiktig: ok.mp3, bra.mp3, fantastisk.mp3
-#LydForFeil: err.mp3
-#Tell: block2
-#DragMål: MålPlass, [figur], 500, 450
-#Neste: Scene4
+#Start: Busken
+#Bilde: bakgrunnutensti.png
+#Lyd: RimKattRimHus.wav, KattLyd.wav
+#Handling: Rev, Rev.png, 337, 1409
+#Handling: KattRim, KattRim.png, 525, 721
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 1517, 1649
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Busken1 (Busken1), Hatt.png, 2057, 561 
+#Handling: Feil, Skje.png, 1337, 341
+#Handling: Feil, Eple.png, 1489, 1017
+#Slutt:
+
+#Start: Busken1
+#Bilde: bakgrunnutensti.png
+#Lyd: MusLyd.wav
+#Handling: Rev, Rev.png, 337, 1409
+#Handling: Mus, Mus.png, 525, 721
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 1517, 1649
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Stienstein3 (Stienstein3), Hus.png, RiktigLyd.wav, 2057, 561
+#Handling: Feil, Bil.png, 1337, 341
+#Handling: Feil, Paere.png, 1489, 1017
+#Slutt:
+
+#Start: Stienstein3 
+#Bilde: bakgrunnmedsti.png
+#Lyd: Sabra.wav, TrykkPaTre.wav
+#Handling: Litennott, LitenNott.png, 1665, 1689
+#Handling: Litennott, LitenNott.png, 1789, 1365
+#Handling: Litennott, LitenNott.png, 937, 1077
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 797, 1205
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Treet (Treet), Tre.png, RiktigLyd.wav, 813, 285
+#Handling: Feil, Kurv.png, FeilPlassPaStien.wav, 1661, 337
 #Slutt
 
-#Start: Scene4 
-#Bilde: [bakgrunn]
-#DragAlternativ: block, MålPlass ,block.png , err.mp3, 50, 50
-#DragMål: MålPlass, [figur], 500, 450
-#Handling: Gå til Scene3, [figur], 500,200
+#Start: Treet
+#Bilde: bakgrunnmedtre.png
+#Lyd: HjelpTredimensjonale.wav, FigurIs.m4a
+#Handling: Is, Is.png, 877, 941
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 329, 1085
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Feil, Kube.png, FeilLyd.wav, 1773, 365
+#Handling: Feil, Kule.png, FeilLyd.wav, 1793, 929
+#Handling: Gå til Treet1 (Treet1), Kjegle.png, RiktigLyd.wav, 1829, 1565
+#Slutt:
+
+#Start: Treet1
+#Bilde: bakgrunnmedtre.png
+#Lyd: FigurTerning.m4a
+#Handling: Terning, Terning.png, 877, 941
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 329, 1085
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Treet2 (Treet2), Kube.png, RiktigLyd.wav, 1773, 365
+#Handling: Feil, Kule.png, FeilLyd.wav, 1793, 929
+#Handling: Feil, Kjegle.png, FeilLyd.wav, 1829, 1565
+#Slutt:
+
+#Start: Treet2
+#Bilde: bakgrunnmedtre.png
+#Lyd: FigurGarnNoste.m4a
+#Handling: Garnnoste, GarnNoste.png, 877, 941
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 329, 1085
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Stienstein4 (Stienstein4), Kule.png, RiktigLyd.wav, 1793, 929
+#Handling: Feil, Kube.png, FeilLyd.wav, 1829, 1565
+#Handling: Feil, Kjegle.png, FeilLyd.wav, 1773, 365
+#Slutt:
+
+#Start: Stienstein4 
+#Bilde: bakgrunnmedsti.png
+#Lyd: Sabra.wav, TrykkPaKurven.wav
+#Handling: Litennott, LitenNott.png, 1665, 1689
+#Handling: Litennott, LitenNott.png, 1789, 1365
+#Handling: Litennott, LitenNott.png, 937, 1077
+#Handling: Litennott, LitenNott.png, 809, 573
+#Handling: Ekornlyd, NotteStart.png, NottinottLyd.wav, 1145, 621
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Kurven (Kurven), Kurv.png, RiktigLyd.wav, 1661, 337
 #Slutt
+
+#Start: Kurven
+#Bilde: bakgrunnmedgress.png
+#Lyd: StjaletNotter.wav, VelgNottTrykkPaKurv.wav, GronnPilNottOppgaven.m4a
+#Handling: Tristenotte, TristeNotte.png, 2249, 1069
+#DragMål: Kurv, Kurv.png, 1461, 1529
+#DragAlternativ: nott, Kurv, LitenNott.png, "", 100, 100,1500,1500,10
+#Handling: Gå til Telling (Telling), LitenGronnPil.png, 2365, 1809
+#Neste: Telling
+#Slutt
+
+#Start: Telling
+#Bilde: bakgrunnmedgress.png
+#Lyd: NotteneTilKurven.wav, GronnPilTelleOppgaven.m4a 
+#Handling: Kurven, Kurv.png, 285, 777
+#Handling: Tell, ettTall.png, TalletEn.m4a, 109, 1869
+#Handling: Tell, ToTall.png, TalletTo.m4a, 309, 1869
+#Handling: Tell, TreTall.png, TalletTre.m4a, 550, 1869
+#Handling: Tell, FireTall.png, TalletFire.m4a, 829, 1869
+#Handling: Tell, FemTall.png, TalletFem.m4a, 1213, 1869
+#Handling: Tell, SeksTall.png, TalletSeks.m4a, 1500, 1869
+#Handling: Tell, SjuTall.png, TalletSju.m4a, 1750, 1869
+#Handling: Tell, otteTall.png, TalletOtte.m4a, 2000, 1869
+#Handling: Tell, NiTall.png, TalletNi.m4a, 2300, 1869
+#Handling: Tell, ettTall.png, TalletTi.m4a, 2485, 1869
+#Handling: Tell, Nulltall.png, 2549, 1869
+#Handling: Tell, LitenNott.png, 50, 1350
+#Handling: Tell, LitenNott.png, 409, 1350
+#Handling: Tell, LitenNott.png, 665, 1350
+#Handling: Tell, LitenNott.png, 929, 1350
+#Handling: Tell, LitenNott.png, 1200, 1350
+#Handling: Tell, LitenNott.png, 1500, 1350
+#Handling: Tell, LitenNott.png, 1750, 1350
+#Handling: Tell, LitenNott.png, 1915, 1350
+#Handling: Tell, LitenNott.png, 2150, 1350
+#Handling: Tell, LitenNott.png, 2300, 1350
+#Handling: Tell, LitenNott.png, 2400, 1350
+#Handling: EkornLyd, StorGladNotte.png, NottinottLyd.wav, 1381, 561
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Stienstein5 (Stienstein5), LitenGronnPil.png, 2349, 1021
+#Slutt:
+
+#Start: Stienstein5
+#Bilde: bakgrunnmedsti.png
+#Lyd: Hurra.wav, NyRunde.wav
+#Handling: Litennott, LitenNott.png, 1665, 1689
+#Handling: Litennott, LitenNott.png, 1789, 1365
+#Handling: Litennott, LitenNott.png, 937, 1077
+#Handling: Litennott, LitenNott.png, 809, 573
+#Handling: Litennott, LitenNott.png, 1853, 605
+#Handling: Ekornlyd, NotteKasterNotter.png, NottinottLyd.wav, 2337, 421
+#Handling: Gjenta, LitenFugl.png, Repitisjon.wav, 237, 201
+#Handling: Gå til Alternativ start, LitenGronnPil.png, NyRunde.wav, 277, 1785
+#Slutt
+

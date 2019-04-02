@@ -130,6 +130,11 @@
         reg: /\#\s*Handling\s*:\s*(.*)/,
         atomic: true
       },
+	  {
+        key: "Bevegelse",
+        reg: /\#\s*Bevegelse\s*:\s*(.*)/,
+        atomic: true
+      },
       {
         key: "Terning",
         reg: /\#\s*Terning\s*:\s*(.*)/,
@@ -207,7 +212,6 @@
 
       let source = [];
       let section = null;
-
       programData.split("\n").forEach((item) => {
         if (item.indexOf("//") != 0) {
           if (item != "" && item.length > 1) {
@@ -230,6 +234,7 @@
         sceen.forEach((item) => {
 
           let cmdKey = extractCommand(item);
+		  console.log("cmdKey: "+cmdKey)
           let cmd = getCommandSemantics(cmdKey)
 
           if (cmd == null) {
@@ -252,9 +257,6 @@
             }
           }
         })
-
-        console.log(section);
-
         program.push(section);
         section = null;
 
@@ -427,7 +429,6 @@
           handlinger += t;
         }
       }
-
       element = applyModelToTemplate(program, element);
       element = applyConditionalsToTemplate(program, element);
       element = element.replace("[Handlinger/]", handlinger);
@@ -435,8 +436,8 @@
       element = createDragAndDrop(program, element);
       element = createDice(program, element);
       element = createTargets(program, element);
-      element = createElement(element);
-
+      element = createBevegelser(program, element);
+	  element = createElement(element);
       container.appendChild(element);
 
       currentSection = program;
@@ -454,7 +455,35 @@
       }
 
     }
+	
+	// Bevegelse
+	function createBevegelser(program, element)
+	{
+	let output = "";
+      if (Array.isArray(program.Bevegelse)) {
+        program.Bevegelse.forEach(raw => {
+          output += createBevegelse(raw);
+        });
 
+      } else if (program.Bevegelse) {
+        output = createBevegelse(program.Bevegelse);
+      }
+      element = element.replace("[Bevegelse/]", output)
+      return element;
+	}
+	function createBevegelse(raw)
+	{
+		let target = raw.split(",")
+		let img = target[0].trim();
+		let sound = target[1].trim();
+		let x = target[2].trim();
+		console.log(x);
+		let y = target[3].trim();
+		console.log(y);
+		return "<img  class='bevegelse' src='img/" + img + "'  style='left:" + x +
+        "px;top:" + y + "px;position:absolute' data-sound='"+ sound +"' onclick='startBevegelse(event)'>"
+	}
+	
     // Drag targets
     function createTargets(program, element) {
 
@@ -468,8 +497,6 @@
       } else if (program.DragMål) {
         output = createTarget(program.DragMål);
       }
-
-
       element = element.replace("[DragMål/]", output)
       return element;
     }
@@ -645,7 +672,7 @@
       element = element.replace("[DragAndDrop/]", output);
       return element;
     }
-
+	
     function startDrag(ev) {
       if (clickTaerget == null) {
         canKillClickTarget = false;
@@ -698,6 +725,12 @@
       }
 
     }
+	function startBevegelse(env)
+	{
+		let sound = env.target.getAttribute("data-sound");
+		playSound(sound);
+		env.target.setAttribute("src", env.target.getAttribute("src"));	
+	}
 
     function GetRandomPosInRect(rect) {
       let minX = rect[0].trim();
@@ -777,6 +810,7 @@
       if (statment && statment !== "") {
         matches = (/\#(\s*(.*)\s*\:|\s*(.*))/gmi).exec(statment);
         if (matches) {
+		console.log(statment);
           matches = matches.reduce((acc, val) => {
             return val ? val : acc;
           });
@@ -793,6 +827,7 @@
         "msg": msg,
         "type": type
       };
+	  console.log(data);
       template = createElement(applyModelToTemplate(data, template));
       document.body.prepend(template);
 
@@ -1045,7 +1080,7 @@
 
   <script data-display-template="oppgave" type="text/html">
     <div>
-      <img src="img/{{Bilde/}}" alt="{{Start/}}" usemap="#{{Start/}}" id="imgBackground" /> [DragMål/] [Nedtelling/] [Terning/] [Handlinger/] [DragAndDrop/] {{#if Lyd}}
+      <img src="img/{{Bilde/}}" alt="{{Start/}}" usemap="#{{Start/}}" id="imgBackground" /> [DragMål/] [Nedtelling/] [Terning/] [Handlinger/] [DragAndDrop/] [Bevegelse/] {{#if Lyd}}
       <img class="speaker" src="img/hoyttaler.png" alt="Spill instruksjon" id="hoytaler" onclick="playSound('{{Lyd/}}')" /> {{/#if}}
     </div>
   </script>

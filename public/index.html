@@ -66,7 +66,7 @@
       opacity: 0;
     }
 
-    .blue{
+    .blue {
       background-color: skyblue;
     }
   </style>
@@ -93,8 +93,7 @@
     var dice = null;
     var state = [];
 
-    let keywords = [
-      {
+    let keywords = [{
         key: "Kamera",
         reg: /\#\s*Kamera\s*:\s*(.*)/,
         atomic: true
@@ -143,6 +142,11 @@
       {
         key: "Handling",
         reg: /\#\s*Handling\s*:\s*(.*)/,
+        atomic: true
+      },
+      {
+        key: "Bevegelse",
+        reg: /\#\s*Bevegelse\s*:\s*(.*)/,
         atomic: true
       },
       {
@@ -222,7 +226,6 @@
 
       let source = [];
       let section = null;
-
       programData.split("\n").forEach((item) => {
         if (item.indexOf("//") != 0) {
           if (item != "" && item.length > 1) {
@@ -245,6 +248,7 @@
         sceen.forEach((item) => {
 
           let cmdKey = extractCommand(item);
+          console.log("cmdKey: " + cmdKey)
           let cmd = getCommandSemantics(cmdKey)
 
           if (cmd == null) {
@@ -267,9 +271,6 @@
             }
           }
         })
-
-        console.log(section);
-
         program.push(section);
         section = null;
 
@@ -283,14 +284,14 @@
         if (section.hasOwnProperty(keyWord)) {
 
           let item = section[keyWord];
-          if(typeof(section) == "string"){
+          if (typeof (section) == "string") {
             item = section;
           }
 
           if (Array.isArray(item)) {
-            
+
             let output = [];
-            for(var index = 0; index < item.length; index++){
+            for (var index = 0; index < item.length; index++) {
               let newItem = applyState(item[index]);
               output[index] = newItem;
             }
@@ -301,30 +302,30 @@
             let out = item;
             let m;
 
-            if(item.indexOf("suralv1")> -1){
+            if (item.indexOf("suralv1") > -1) {
               console.log("WTF");
             }
 
             while ((m = regex.exec(item)) !== null) {
-                // This is necessary to avoid infinite loops with zero-width matches
-                if (m.index === regex.lastIndex) {
-                    regex.lastIndex++;
-                }
-               
-                out = out.replace(m[0],state[m[1]]);
-                
-                // The result can be accessed through the `m`-variable.
-                m.forEach((match, groupIndex) => {
-                    console.log(`Found match, group ${groupIndex}: ${match}`);
-                });
+              // This is necessary to avoid infinite loops with zero-width matches
+              if (m.index === regex.lastIndex) {
+                regex.lastIndex++;
+              }
+
+              out = out.replace(m[0], state[m[1]]);
+
+              // The result can be accessed through the `m`-variable.
+              m.forEach((match, groupIndex) => {
+                console.log(`Found match, group ${groupIndex}: ${match}`);
+              });
             }
 
-          if(typeof(section) == "string"){
-            section = out;
-          } else{
-            section[keyWord] = out;
-          }
-          
+            if (typeof (section) == "string") {
+              section = out;
+            } else {
+              section[keyWord] = out;
+            }
+
 
 
           }
@@ -449,7 +450,7 @@
 
       program = applyState(program);
       //Linje 400, stopper lydene som kommer fra handlingknappene, som også har 'Gå til' funksjonalitet. 
-	    stopSound();
+      stopSound();
       currentCount = 0;
       ansList = [];
       let element = getTemplate("oppgave");
@@ -474,7 +475,6 @@
           handlinger += t;
         }
       }
-
       element = applyModelToTemplate(program, element);
       element = applyConditionalsToTemplate(program, element);
       element = element.replace("[Handlinger/]", handlinger);
@@ -482,12 +482,12 @@
       element = createDragAndDrop(program, element);
       element = createDice(program, element);
       element = createTargets(program, element);
+      element = createBevegelser(program, element);
       element = createElement(element);
-
       container.appendChild(element);
       currentSection = program;
 
-      if(program.Kamera){
+      if (program.Kamera) {
         setupCamera(program);
       }
 
@@ -507,55 +507,86 @@
 
     // Camera -------------------------------------------------------------
 
-    function setupCamera(program){
+    function setupCamera(program) {
       let position = program.Kamera.split(",")
       let video = document.getElementById("liveVideo")
-      if(position.length < 4){
-        video.setAttribute("style", `width:${window.screen.width}px; height:${window.screen.height}px; left:0px; top:0px; position: absolute;`);
+      if (position.length < 4) {
+        video.setAttribute("style",
+          `width:${window.screen.width}px; height:${window.screen.height}px; left:0px; top:0px; position: absolute;`);
       } else {
-        video.setAttribute("style", ` height:${position[0]}px; width:${position[1]}px;left:${position[2]}px; top:${position[3]}px; position: absolute; `);
+        video.setAttribute("style",
+          ` height:${position[0]}px; width:${position[1]}px;left:${position[2]}px; top:${position[3]}px; position: absolute; `
+          );
       }
 
-      if(program.Kameraknapp){
+      if (program.Kameraknapp) {
         let button = document.getElementById("cameraButton");
         position = program.Kameraknapp.split(",")
-        if(position.length >= 2){
+        if (position.length >= 2) {
           button.setAttribute("style", `left:${position[0]}px; top:${position[1]}px; position: absolute; z-index:999`);
         }
       }
     }
 
-    
-    var cameraStream = null;
-    function showVideo(){
 
-      if(cameraStream){
+    var cameraStream = null;
+
+    function showVideo() {
+
+      if (cameraStream) {
         // Slår av kameraet ved å trykke på knappen igjen
-        var track = cameraStream.getTracks()[0];  
+        var track = cameraStream.getTracks()[0];
         track.stop();
         cameraStream = null;
         return
       }
 
       var video = document.getElementById('liveVideo');
-      if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         video.setAttribute('autoplay', '');
         video.setAttribute('muted', '');
         video.setAttribute('playsinline', '');
         // Mulig å manipulere Z Index her
         var constraints = {
-            audio: false,
-            video: {
-                facingMode: 'user'
-            }
+          audio: false,
+          video: {
+            facingMode: 'user'
+          }
         }
 
-        navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-            cameraStream = stream;
-            video.srcObject = stream;
-            video.play();
+        navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+          cameraStream = stream;
+          video.srcObject = stream;
+          video.play();
         });
       }
+    }
+
+    // Bevegelse
+    function createBevegelser(program, element) {
+      let output = "";
+      if (Array.isArray(program.Bevegelse)) {
+        program.Bevegelse.forEach(raw => {
+          output += createBevegelse(raw);
+        });
+
+      } else if (program.Bevegelse) {
+        output = createBevegelse(program.Bevegelse);
+      }
+      element = element.replace("[Bevegelse/]", output)
+      return element;
+    }
+
+    function createBevegelse(raw) {
+      let target = raw.split(",")
+      let img = target[0].trim();
+      let sound = target[1].trim();
+      let x = target[2].trim();
+      console.log(x);
+      let y = target[3].trim();
+      console.log(y);
+      return "<img  class='bevegelse' src='img/" + img + "'  style='left:" + x +
+        "px;top:" + y + "px;position:absolute' data-sound='" + sound + "' onclick='startBevegelse(event)'>"
     }
 
     // Drag targets
@@ -571,8 +602,6 @@
       } else if (program.DragMål) {
         output = createTarget(program.DragMål);
       }
-
-
       element = element.replace("[DragMål/]", output)
       return element;
     }
@@ -682,7 +711,7 @@
     function testTarget(item) {
       let el = item[0]
       let target = document.getElementById(el.dataset.target);
-      if(target){
+      if (target) {
         let rect1 = el.getBoundingClientRect();
         let rect2 = target.getBoundingClientRect();
         var overlap = !(rect1.right < rect2.left ||
@@ -730,7 +759,7 @@
 
             let dragObject = "<img  alt='" + name + "' data-target='target-" + target +
               "' onclick='startDrag(event)' class='drag' src='img/" + img.trim() + "'  style='left:" + pos.x +
-              "px;top:" + pos.y + "px' data-sound='"+ sound +"' />"
+              "px;top:" + pos.y + "px' data-sound='" + sound + "' />"
             output += dragObject;
           }
         }
@@ -739,7 +768,7 @@
           program.DragAlternativ.forEach(raw => {
             parseDrag(raw);
           });
-        } else{
+        } else {
           parseDrag(program.DragAlternativ);
         }
 
@@ -764,25 +793,24 @@
 
           if (currentSection.Tell) {
             let atr = clickTaerget[0].getAttribute("alt").trim();
-           
+
             if (currentSection.Tell.trim() == atr) {
               created--;
-            } else{
+            } else {
               remove = false;
             }
           } else {
             created--;
           }
 
-          if(remove){
-            if(sound && sound.length > 4){
-                playSound(sound);
-            }
-            else if(currentSection.LydForRiktig){
-              playSound( pickRandomListElement(currentSection.LydForRiktig.split(",")));
+          if (remove) {
+            if (sound && sound.length > 4) {
+              playSound(sound);
+            } else if (currentSection.LydForRiktig) {
+              playSound(pickRandomListElement(currentSection.LydForRiktig.split(",")));
             }
           } else {
-            if(currentSection.LydForFeil){
+            if (currentSection.LydForFeil) {
               playSound(currentSection.LydForFeil);
             }
           }
@@ -790,7 +818,7 @@
           if (currentSection.DragForbli == undefined && remove) {
             clickTaerget[0].parentNode.removeChild(clickTaerget[0]);
           }
-        } 
+        }
 
         clickTaerget = null;
 
@@ -802,23 +830,29 @@
 
     }
 
+    function startBevegelse(env) {
+      let sound = env.target.getAttribute("data-sound");
+      playSound(sound);
+      env.target.setAttribute("src", env.target.getAttribute("src"));
+    }
+
     function GetRandomPosInRect(rect) {
       let minX = rect[0].trim();
       let minY = rect[1].trim();
 
-      if(rect.length > 2){
-      let width = rect[2].trim();
-      let height = rect[3].trim();
+      if (rect.length > 2) {
+        let width = rect[2].trim();
+        let height = rect[3].trim();
 
-      let x = Math.floor(((width - minX) * Math.random()) + minX);
-      let y = Math.floor(((height - minY) * Math.random()) + minY);
+        let x = Math.floor(((width - minX) * Math.random()) + minX);
+        let y = Math.floor(((height - minY) * Math.random()) + minY);
 
-      return {
-        x: x,
-        y: y
-      };
+        return {
+          x: x,
+          y: y
+        };
       }
-      return{
+      return {
         x: rect[0],
         y: rect[1]
       };
@@ -880,6 +914,7 @@
       if (statment && statment !== "") {
         matches = (/\#(\s*(.*)\s*\:|\s*(.*))/gmi).exec(statment);
         if (matches) {
+          console.log(statment);
           matches = matches.reduce((acc, val) => {
             return val ? val : acc;
           });
@@ -896,6 +931,7 @@
         "msg": msg,
         "type": type
       };
+      console.log(data);
       template = createElement(applyModelToTemplate(data, template));
       document.body.prepend(template);
 
@@ -1020,7 +1056,7 @@
       var file = soundQue.shift();
       if (file) {
         audio = new Audio("sound/" + file.trim());
-        audio.addEventListener("load", function() {
+        audio.addEventListener("load", function () {
           audio.play();
         }, true);
         audio.onended = function () {
@@ -1051,9 +1087,9 @@
       return a;
     }
 
-    function pickRandomListElement(list){
-      if(Array.isArray(list)){
-        let rnd = Math.round((list.length-1) * Math.random())
+    function pickRandomListElement(list) {
+      if (Array.isArray(list)) {
+        let rnd = Math.round((list.length - 1) * Math.random())
         return list[rnd].trim();
       }
       return list.trim();
@@ -1132,25 +1168,27 @@
 
   <script data-display-template="oppgave" type="text/html">
     <div>
-      <img src="img/{{Bilde/}}" alt="{{Start/}}" usemap="#{{Start/}}" id="imgBackground" /> [DragMål/] [Nedtelling/] [Terning/] [Handlinger/] [DragAndDrop/] {{#if Lyd}}
+      <img src="img/{{Bilde/}}" alt="{{Start/}}" usemap="#{{Start/}}" id="imgBackground" /> 
+      [DragMål/] [Nedtelling/] [Terning/] [Handlinger/] [DragAndDrop/] [Bevegelse/] 
+      {{#if Lyd}}
       <img class="speaker" src="img/hoyttaler.png" alt="Spill instruksjon" id="hoytaler" onclick="playSound('{{Lyd/}}')" /> {{/#if}}
       {{#if Kamera}}
-        <video id="liveVideo" autoplay></video>
-        <img id="cameraButton" onClick="showVideo()" src="img/camera.png" alt="Slå på kamera" style="left:0;top:0;position:absolute">
+      <video id="liveVideo" autoplay></video>
+      <img id="cameraButton" onClick="showVideo()" src="img/camera.png" alt="Slå på kamera" style="left:0;top:0;position:absolute">
       {{/#if}}
     </div>
   </script>
   <script data-display-template="handling" type="text/html">
     <div>
-      <img style="left:{{x/}}px;top:{{y/}}px;position:absolute" src="img/{{Bilde/}}" alt="{{Tekst/}}" onclick="{{#if Lagre}}saveState('{{Lagre/}}'){{/#if}};gotoNext('{{Neste/}}'{{#if Lyd}},'{{Lyd/}}'{{/#if}});"
-      />
+      <img style="left:{{x/}}px;top:{{y/}}px;position:absolute" src="img/{{Bilde/}}" alt="{{Tekst/}}"
+        onclick="{{#if Lagre}}saveState('{{Lagre/}}'){{/#if}};gotoNext('{{Neste/}}'{{#if Lyd}},'{{Lyd/}}'{{/#if}});" />
     </div>
   </script>
 
   <script data-display-template="timer" type="text/html">
     <div>
-      <img style="left:{{x/}}px;top:{{y/}}px;position:absolute" src="img/{{Bilde/}}" alt="TidTaker" onclick="startTimer({{Tid/}})"
-      />
+      <img style="left:{{x/}}px;top:{{y/}}px;position:absolute" src="img/{{Bilde/}}" alt="TidTaker"
+        onclick="startTimer({{Tid/}})" />
     </div>
   </script>
 

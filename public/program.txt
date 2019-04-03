@@ -3,6 +3,8 @@
 #Lyd: TrykkPaDenGronnePilenNesteSide.m4a
 #Handling: Intro, StorGladNotte.png, 950, 650
 #Handling: Gå til Bruksanvisning, LitenGronnPil.png, 2200, 1800
+#Kamera: 640,480,50,50
+#Kameraknapp: 20,20
 #Slutt:
 
 #Start: Bruksanvisning

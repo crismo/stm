@@ -65,6 +65,10 @@
     .invisible {
       opacity: 0;
     }
+
+    .blue{
+      background-color: skyblue;
+    }
   </style>
 
 </head>
@@ -89,7 +93,18 @@
     var dice = null;
     var state = [];
 
-    let keywords = [{
+    let keywords = [
+      {
+        key: "Kamera",
+        reg: /\#\s*Kamera\s*:\s*(.*)/,
+        atomic: true
+      },
+      {
+        key: "Kameraknapp",
+        reg: /\#\s*Kameraknapp\s*:\s*(.*)/,
+        atomic: true
+      },
+      {
         key: "Lagre",
         reg: /\#\s*Lagre\s*:\s*(.*)/,
         atomic: true
@@ -434,7 +449,7 @@
 
       program = applyState(program);
       //Linje 400, stopper lydene som kommer fra handlingknappene, som også har 'Gå til' funksjonalitet. 
-	  stopSound();
+	    stopSound();
       currentCount = 0;
       ansList = [];
       let element = getTemplate("oppgave");
@@ -470,8 +485,11 @@
       element = createElement(element);
 
       container.appendChild(element);
-
       currentSection = program;
+
+      if(program.Kamera){
+        setupCamera(program);
+      }
 
       if (program.Terning) {
         setupDice();
@@ -485,6 +503,59 @@
         playSound(program.Lyd);
       }
 
+    }
+
+    // Camera -------------------------------------------------------------
+
+    function setupCamera(program){
+      let position = program.Kamera.split(",")
+      let video = document.getElementById("liveVideo")
+      if(position.length < 4){
+        video.setAttribute("style", `width:${window.screen.width}px; height:${window.screen.height}px; left:0px; top:0px; position: absolute;`);
+      } else {
+        video.setAttribute("style", ` height:${position[0]}px; width:${position[1]}px;left:${position[2]}px; top:${position[3]}px; position: absolute; `);
+      }
+
+      if(program.Kameraknapp){
+        let button = document.getElementById("cameraButton");
+        position = program.Kameraknapp.split(",")
+        if(position.length >= 2){
+          button.setAttribute("style", `left:${position[0]}px; top:${position[1]}px; position: absolute; z-index:999`);
+        }
+      }
+    }
+
+    
+    var cameraStream = null;
+    function showVideo(){
+
+      if(cameraStream){
+        // Slår av kameraet ved å trykke på knappen igjen
+        var track = cameraStream.getTracks()[0];  
+        track.stop();
+        cameraStream = null;
+        return
+      }
+
+      var video = document.getElementById('liveVideo');
+      if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        video.setAttribute('autoplay', '');
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        // Mulig å manipulere Z Index her
+        var constraints = {
+            audio: false,
+            video: {
+                facingMode: 'user'
+            }
+        }
+
+        navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+            cameraStream = stream;
+            video.srcObject = stream;
+            video.play();
+        });
+      }
     }
 
     // Drag targets
@@ -847,27 +918,6 @@
         .then(function (text) {
           onComplete(true, text);
         });
-
-      /*
-            var request = new XMLHttpRequest();
-            request.open('GET', filePath, true);
-
-            request.onload = function () {
-              if (request.status >= 200 && request.status < 400) {
-                var data = request.responseText;
-                onComplete(true, request.responseText);
-              } else {
-                onComplete(false, null);
-                console.error("Request status for " + MANUSCRIPT_FILE + " " + request.status);
-              }
-            };
-
-            request.onerror = function (e) {
-              onComplete(false, null);
-              console.error(e);
-            };
-
-            request.send();*/
     }
 
     function parseElementContentToDataModel(elementSelector) {
@@ -970,10 +1020,13 @@
       var file = soundQue.shift();
       if (file) {
         audio = new Audio("sound/" + file.trim());
+        audio.addEventListener("load", function() {
+          audio.play();
+        }, true);
         audio.onended = function () {
           playSound();
         };
-        audio.play();
+        audio.autoplay = true;
       }
     }
 
@@ -1072,6 +1125,8 @@
       return nextValue;
     };
 
+
+
     /// TERNING ---------------------------------
   </script>
 
@@ -1079,6 +1134,10 @@
     <div>
       <img src="img/{{Bilde/}}" alt="{{Start/}}" usemap="#{{Start/}}" id="imgBackground" /> [DragMål/] [Nedtelling/] [Terning/] [Handlinger/] [DragAndDrop/] {{#if Lyd}}
       <img class="speaker" src="img/hoyttaler.png" alt="Spill instruksjon" id="hoytaler" onclick="playSound('{{Lyd/}}')" /> {{/#if}}
+      {{#if Kamera}}
+        <video id="liveVideo" autoplay></video>
+        <img id="cameraButton" onClick="showVideo()" src="img/camera.png" alt="Slå på kamera" style="left:0;top:0;position:absolute">
+      {{/#if}}
     </div>
   </script>
   <script data-display-template="handling" type="text/html">

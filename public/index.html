@@ -66,9 +66,6 @@
       opacity: 0;
     }
 
-    .blue {
-      background-color: skyblue;
-    }
   </style>
 
 </head>
@@ -101,6 +98,11 @@
       {
         key: "Kameraknapp",
         reg: /\#\s*Kameraknapp\s*:\s*(.*)/,
+        atomic: true
+      },
+      {
+        key: "VelgEn",
+        reg: /\#\s*VelgEn\s*:\s*(.*)/,
         atomic: true
       },
       {
@@ -208,7 +210,7 @@
           parseProgram(data);
           programIndex = 0;
           //gotoNext("lbl") //for jumping to diffrent location in program
-          renderProgramSection(program[programIndex]);
+          renderProgramSection(JSON.parse(JSON.stringify(program[programIndex])));
         } else {
           showFeedBack("Kunne ikke laste program fil, er du sikker på at det ligger en " + MANUSCRIPT_FILE +
             " fil i public mappen", "alert-danger", false);
@@ -279,7 +281,7 @@
     }
 
     function applyState(section) {
-
+      console.log("Applying state")
       for (let keyWord in section) {
         if (section.hasOwnProperty(keyWord)) {
 
@@ -302,19 +304,12 @@
             let out = item;
             let m;
 
-            if (item.indexOf("suralv1") > -1) {
-              console.log("WTF");
-            }
-
             while ((m = regex.exec(item)) !== null) {
-              // This is necessary to avoid infinite loops with zero-width matches
               if (m.index === regex.lastIndex) {
                 regex.lastIndex++;
               }
 
               out = out.replace(m[0], state[m[1]]);
-
-              // The result can be accessed through the `m`-variable.
               m.forEach((match, groupIndex) => {
                 console.log(`Found match, group ${groupIndex}: ${match}`);
               });
@@ -325,13 +320,31 @@
             } else {
               section[keyWord] = out;
             }
-
-
-
           }
         }
       }
       return section;
+    }
+
+    function chooseItemsToSave(raw){
+      console.log(raw)
+      if (!Array.isArray(raw)) {
+        raw = [raw];
+      }
+
+      raw.forEach(st => {
+        if (st.indexOf("=") > 0) {
+          st = st.split("=");
+          let key = st[0].trim();
+          let values = st[1].split(",");
+          state[key] = values[Math.round((values.length-1) * Math.random())].trim() ;
+          console.log("State " + key + " set to " + state[key]);
+
+        } else {
+          console.error("This is not a valid state " + state)
+        }
+      });
+
     }
 
     function saveState(raw) {
@@ -378,7 +391,7 @@
 
       let s = findProgramSection("Start", next);
       if (s) {
-        renderProgramSection(s);
+        renderProgramSection(JSON.parse(JSON.stringify(s)));
       } else {
         showFeedBack("Finner ingen scene med navn " + next, "alert-danger", false);
       }
@@ -497,6 +510,10 @@
 
       if (program.Lagre) {
         saveState(program.Lagre);
+      }
+
+      if(program.VelgEn){
+        chooseItemsToSave(program.VelgEn)
       }
 
       if (program.Lyd) {

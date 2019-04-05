@@ -463,7 +463,7 @@
 
       program = applyState(program);
       //Linje 400, stopper lydene som kommer fra handlingknappene, som også har 'Gå til' funksjonalitet. 
-      stopSound();
+      //stopSound();
       currentCount = 0;
       ansList = [];
       let element = getTemplate("oppgave");
@@ -773,7 +773,7 @@
             } else {
               created++;
             }
-
+			console.log(pos);
             let dragObject = "<img  alt='" + name + "' data-target='target-" + target +
               "' onclick='startDrag(event)' class='drag' src='img/" + img.trim() + "'  style='left:" + pos.x +
               "px;top:" + pos.y + "px;position:absolute' data-sound='" + sound + "' />"
@@ -836,6 +836,12 @@
             clickTaerget[0].parentNode.removeChild(clickTaerget[0]);
           }
         }
+		else
+		{
+		    if (currentSection.LydForFeil) {
+              playSound(currentSection.LydForFeil);
+		}
+		}
 
         clickTaerget = null;
 

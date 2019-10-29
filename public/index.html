@@ -347,19 +347,44 @@
 
     }
 
+    
     function saveState(raw) {
       if (!Array.isArray(raw)) {
         raw = raw.split(",");
       }
       raw.forEach(st => {
         if (st.indexOf("=") > 0) {
-          st = st.split("=");
-          let key = st[0].trim();
-          let value = st[1].trim();
-          state[key] = value;
-
-          console.log("State " + key + " set to " + value);
-
+          add = st.split("+");
+		  minus = st.split("-");
+		  mul = st.split("*");
+		  div = st.split("/");
+		  
+		  st = st.split("=");
+		  
+		  let key = st[0].trim();
+		  if(add.length > 1){
+			state[key] = parseInt(state[key], 10) + parseInt(add[1], 10);
+			console.log("Updated state " + key + " set to " + state[key]);
+		  }
+		  else if(minus.length > 1){
+			state[key] = parseInt(state[key], 10) - parseInt(minus[1], 10);
+			console.log("Updated state " + key + " set to " + state[key]);
+		  }
+		  else if(mul.length > 1){
+			state[key] = parseInt(state[key], 10) * parseInt(mul[1], 10);
+			console.log("Updated state " + key + " set to " + state[key]);
+		  }
+		  else if(div.length > 1){
+			state[key] = parseInt(state[key], 10) / parseInt(div[1], 10);
+			console.log("Updated state " + key + " set to " + state[key]);
+		  }
+		  else
+		  {
+			  let value = st[1].trim();			    
+			  state[key] = value;
+			  console.log("State " + key + " set to " + value);
+		  }
+		  
         } else {
           console.error("This is not a valid state " + state)
         }
